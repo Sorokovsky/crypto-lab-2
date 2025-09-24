@@ -20,7 +20,8 @@ class FeistelAnalyzer:
                         stats[i][cypher[i]] = 1
         return stats
 
-    def show_stats(self, stats: list[dict]) -> None:
+    @staticmethod
+    def show_stats(stats: list[dict]) -> None:
         max_index = 0
         for i in range(len(stats)):
             stat = stats[i]
