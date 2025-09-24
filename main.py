@@ -1,4 +1,6 @@
 from feistel_encryptor import *
+from feistel_analyzer import *
+from utils import *
 
 def generate_all_keys() -> list[str]:
     keys = []
@@ -9,13 +11,9 @@ def generate_all_keys() -> list[str]:
 
 def main():
     encryptor = FeistelEncryptor()
-    keys = generate_all_keys()
-    decrypted = "01010111010111000000000011111110"
-    cypher = "00010100111101000111111101001000"
-    for key in keys:
-        encrypted = encryptor.encrypt(decrypted, key)
-        if encrypted == cypher:
-            print(key)
+    analyzer = FeistelAnalyzer(collect_rows())
+    stats = analyzer.generate_stats()
+    analyzer.show_stats(stats)
 
 
 if __name__ == '__main__':
