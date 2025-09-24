@@ -1,19 +1,38 @@
-def bit_or(first: str, second: str) -> str:
-    if first == "1" or second == "1":
-        return '1'
-    else:
-        return '0'
+def bits_or(first: str, second: str) -> str:
+    result: list[str] = []
+    if len(first) != len(second):
+        raise ValueError('First & second must be of same length')
 
-def bit_and(first: str, second: str) -> str:
-    if first == "1" and second == "1":
-        return '1'
-    else:
-        return '0'
+    for i in range(len(first)):
+        if first[i] == '1' or second[i] == '1':
+            result.append("1")
+        else:
+            result.append("0")
+    return "".join(result)
 
-def bit_xor(first: str, second: str) -> str:
-    if first == "1" and second == '0':
-        return '1'
-    elif first == '0' and second == '1':
-        return '1'
-    else:
-        return '0'
+
+def bits_and(first: str, second: str) -> str:
+    result: list[str] = []
+    if len(first) != len(second):
+        raise ValueError('First & second must be of same length')
+
+    for i in range(len(first)):
+        if first[i] == '1' and second[i] == '1':
+            result.append("1")
+        else:
+            result.append("0")
+    return "".join(result)
+
+def bits_xor(first: str, second: str) -> str:
+    result: list[str] = []
+    if len(first) != len(second):
+        raise ValueError('First & second must be of same length')
+
+    for i in range(len(first)):
+        if first[i] == '0' and second[i] == '1':
+            result.append("1")
+        elif first[i] == '1' and second[i] == '0':
+            result.append("1")
+        else:
+            result.append("0")
+    return "".join(result)
