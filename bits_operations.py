@@ -44,7 +44,7 @@ def bits_right_move(bits: str, position: int) -> str:
     return "".join(result)
 
 def bits_left_move(bits: str, position: int) -> str:
-    if not bits:  # Обробка порожнього рядка
+    if not bits:
         return ""
     count = len(bits)
     position = position % count  # Нормалізація позиції
