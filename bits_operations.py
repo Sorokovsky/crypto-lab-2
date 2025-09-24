@@ -36,3 +36,17 @@ def bits_xor(first: str, second: str) -> str:
         else:
             result.append("0")
     return "".join(result)
+
+def bits_right_move(bits: str, position: int) -> str:
+    count = len(bits)
+    position = position % count
+    result = bits[count - position:] + bits[:count - position]
+    return "".join(result)
+
+def bits_left_move(bits: str, position: int) -> str:
+    if not bits:  # Обробка порожнього рядка
+        return ""
+    count = len(bits)
+    position = position % count  # Нормалізація позиції
+    result = bits[position:] + bits[:position]  # Зсув вліво
+    return result
