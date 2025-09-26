@@ -1,8 +1,5 @@
-from feistel_encryptor import *
-from typing import *
-
 class FeistelAnalyzer:
-    def __init__(self, pairs: list[str]) -> list[dict]:
+    def __init__(self, pairs: list[str]) -> None:
         self._pairs = pairs.copy()
 
     def generate_stats(self):
@@ -21,14 +18,21 @@ class FeistelAnalyzer:
         return stats
 
     @staticmethod
-    def show_stats(stats: list[dict]) -> None:
-        max_index = 0
+    def collect_differences(stats: list[dict]) -> list[int]:
+        result = []
+        zero_index = "0"
+        one_index = "1"
         for i in range(len(stats)):
             stat = stats[i]
-            zero_stat = stat["0"]
-            one_stat = stat["1"]
-            difference = abs(zero_stat - one_stat)
-            if abs(stats[max_index]["0"] - stats[max_index]["1"]) <= difference:
+            result.append(abs(stat[zero_index] - stat[one_index]))
+        return result
+
+    @staticmethod
+    def show_stats(differences: list[int]) -> None:
+        max_index = 0
+        for i in range(len(differences)):
+            difference = differences[i]
+            if abs(differences[max_index]) <= difference:
                 max_index = i
-            print(f"Абсолютна різниця кількості появи 0, 1 у {i + 1} біті = {zero_stat} - {one_stat} = {difference}")
-        print(f"Максимальна абсолютна різниця у {max_index + 1} біті, яка становить {abs(stats[max_index]['0'] - stats[max_index]['1'])}")
+            print(f"Абсолютна різниця кількості появи 0, 1 у {i + 1} біті = {difference}")
+        print(f"Максимальна абсолютна різниця у {max_index + 1} біті, яка становить {differences[max_index]}")
