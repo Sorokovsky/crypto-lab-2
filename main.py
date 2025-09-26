@@ -24,32 +24,23 @@ def key_bits_for_r4_11():
                 k0_12 = get_string_from_binary(j)
                 k0_14 = get_string_from_binary(k)
                 correct = True
+                new_rows = []
                 for row in rows:
                     parts = row.split(";")
                     plain = parts[0]
-                    cipher = parts[1]
                     l0_11 = plain[10]
                     r0_11 = plain[10 + 16]
                     encrypted = r4_11(k0_14, k0_12, l0_11, k0_11, r0_11)
-                    if encrypted != cipher[10 + 16]:
-                        correct = False
+                    new_rows.append(f"{l0_11};{encrypted}")
+                analyzer = FeistelAnalyzer(new_rows)
+                differences = analyzer.collect_differences(analyzer.generate_stats())
+                analyzer.show_stats(differences)
                 if correct:
                     print(f"k0_11: {k0_11}; k0_12: {k0_12}; k0_14: {k0_14};")
     print("======================================================================================")
 
 def main():
     key_bits_for_r4_11()
-    keys = generate_all_keys()
-    rows = collect_rows()
-    parts = rows[0].split(";")
-    plain = parts[0]
-    cipher = parts[1]
-    encryptor = FeistelEncryptor()
-    for key in keys:
-        encrypted = encryptor.encrypt(plain, key)
-        if encrypted == cipher:
-            print(f"k0_11: {key[10]}; k0_12: {key[11]}; k0_14: {key[13]};")
-    print("======================================================================================")
 
 if __name__ == '__main__':
     main()
