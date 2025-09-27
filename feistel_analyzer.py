@@ -9,12 +9,8 @@ class FeistelAnalyzer:
             cypher = parts[1]
             for i in range(len(cypher)):
                 if len(stats) <= i:
-                    stats.append({cypher[i]: 1})
-                else:
-                    if cypher[i] in stats[i]:
-                        stats[i][cypher[i]] += 1
-                    else:
-                        stats[i][cypher[i]] = 1
+                    stats.append({"0": 0, "1": 0})
+                stats[i][cypher[i]] += 1
         return stats
 
     @staticmethod

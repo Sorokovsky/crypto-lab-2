@@ -2,7 +2,6 @@ from feistel_encryptor import *
 from feistel_analyzer import *
 from utils import *
 from parser import *
-from r4_11 import *
 
 def generate_all_keys() -> list[str]:
     keys = []
@@ -11,36 +10,57 @@ def generate_all_keys() -> list[str]:
         keys.append(binary)
     return keys
 
-def key_bits_for_r4_11():
-    encryptor = FeistelEncryptor()
+def key_bits():
     rows = collect_rows()
     analyzer = FeistelAnalyzer(rows)
-    differences = analyzer.collect_differences(analyzer.generate_stats())
-    analyzer.show_stats(differences)
+    encryptor = FeistelEncryptor()
+    original_differences = analyzer.collect_differences(analyzer.generate_stats())
+    keys = []
     for i in range(2):
         for j in range(2):
-            for k in range(2):
-                k0_11 = get_string_from_binary(i)
-                k0_12 = get_string_from_binary(j)
-                k0_14 = get_string_from_binary(k)
-                correct = True
-                new_rows = []
-                for row in rows:
-                    parts = row.split(";")
-                    plain = parts[0]
-                    l0_11 = plain[10]
-                    r0_11 = plain[10 + 16]
-                    encrypted = r4_11(k0_14, k0_12, l0_11, k0_11, r0_11)
-                    new_rows.append(f"{l0_11};{encrypted}")
-                analyzer = FeistelAnalyzer(new_rows)
-                differences = analyzer.collect_differences(analyzer.generate_stats())
-                analyzer.show_stats(differences)
-                if correct:
-                    print(f"k0_11: {k0_11}; k0_12: {k0_12}; k0_14: {k0_14};")
-    print("======================================================================================")
+                k0_3 = get_string_from_binary(i)
+                k0_4 = get_string_from_binary(j)
+                key = f"11{k0_3}{k0_4}101011110101"
+                keys.append(key)
+    max_common_index = 0
+    max_common = 0
+    for j in range(len(keys)):
+        key = keys[j]
+        new_rows = []
+        for row in rows:
+            parts = row.split(";")
+            plain = parts[0]
+            encrypted = encryptor.encrypt(plain, key)
+            new_rows.append(f"{plain};{encrypted}")
+        analyzer = FeistelAnalyzer(new_rows)
+        new_differences = analyzer.collect_differences(analyzer.generate_stats())
+        common_count = 0
+        for i in range(len(new_differences)):
+            if new_differences[i] == original_differences[i]:
+                common_count += 1
+        if max_common < common_count:
+            max_common = common_count
+            max_common_index = j
+    k0_3 = keys[max_common_index][2]
+    k0_4 = keys[max_common_index][3]
+    print(f"Максимально схожа поява бітів із вхідними шифротексті = {max_common} з k0_4 = {k0_3}; k0_4 = {k0_4}")
+
+
 
 def main():
-    key_bits_for_r4_11()
+    rows = collect_rows()
+    encryptor = FeistelEncryptor()
+    key = "1111101011110101"
+    print(f"Ключ: {key}")
+    for row in rows:
+        parts = row.split(";")
+        plain = parts[0]
+        ciphertext = parts[1]
+        encrypted = encryptor.encrypt(plain, key)
+        if encrypted != ciphertext:
+            print("Не правильний")
+            return
+    print("Правильний")
 
 if __name__ == '__main__':
     main()
